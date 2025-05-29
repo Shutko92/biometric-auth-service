@@ -4,6 +4,9 @@ import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
+import com.pm.biometric_auth_service.model.BiometricSettings;
+
+import java.util.Optional;
 
 public interface BiometricAuthService {
 
@@ -12,4 +15,6 @@ public interface BiometricAuthService {
     String getBiometricAuthStatus(Integer userId);
 
     BiometricAuthResponse biometricAuthLogin(BiometricAuthRequest request);
+
+    Optional<BiometricSettings> findByUserId(Integer userId);
 }
