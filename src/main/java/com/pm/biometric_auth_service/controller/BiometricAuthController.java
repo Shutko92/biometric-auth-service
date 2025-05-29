@@ -30,7 +30,7 @@ public class BiometricAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<BiometricAuthResponse> biometricAuthLogin(@RequestBody BiometricAuthRequest request) {
+    public ResponseEntity<?> biometricAuthLogin(@RequestBody BiometricAuthRequest request) {
         return ResponseEntity.ok(biometricAuthService.biometricAuthLogin(request));
     }
 
