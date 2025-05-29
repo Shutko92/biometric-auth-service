@@ -1,6 +1,8 @@
 package com.pm.biometric_auth_service.service.impl;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
+import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
+import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
@@ -18,7 +20,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
     private final LoginManager loginManager;
 
     @Override
-    public BiometricSettingsResponse enableBiometricAuth(BiometricAuthRequest request) {
+    public BiometricSettingsResponse enableBiometricAuth(BiometricRegisterRequest request) {
         BiometricSettings settings = settingsRepository.save(BiometricSettings.builder()
                 .biometricEnabled(true)
                 .deviceInfo(request.deviceInfo())
@@ -41,10 +43,14 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
     }
 
     @Override
-    public BiometricSettingsResponse biometricAuthLogin(Integer userId) {
-        BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
-                new IllegalAuthStateException("User with Id " + userId + " not found"));
+    public BiometricAuthResponse biometricAuthLogin(BiometricAuthRequest request) {
 
-        return null;
+        if (loginManager.isBlocked(request.userId())) {
+            return  new BiometricAuthResponse("Too many invalid requests. Try again later.", 429);
+        }
+        BiometricSettings settings = settingsRepository.findByUserId(request.userId()).orElseThrow(() ->
+                new IllegalAuthStateException("User with Id " + request + " not found"));
+
+        return new BiometricAuthResponse("token", 200);
     }
 }
