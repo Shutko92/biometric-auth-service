@@ -32,7 +32,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
     public String getBiometricAuthStatus(Integer userId) {
         BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
                 new IllegalAuthStateException("User with Id " + userId + " not found"));
-        String status = "";
+        String status;
         if (settings.getBiometricEnabled()) {
             status = "Active";
         } else {
@@ -48,6 +48,13 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
         if (loginManager.isBlocked(request.userId())) {
             return  new BiometricAuthResponse("Too many invalid requests. Try again later.", 429);
         }
+
+        if (!request.authenticated()) {
+            loginManager.incrementAttempts(request.userId());
+            return  new BiometricAuthResponse("Failed login. Try again.", 429);
+        }
+
+        loginManager.resetAttempts(request.userId());
         BiometricSettings settings = settingsRepository.findByUserId(request.userId()).orElseThrow(() ->
                 new IllegalAuthStateException("User with Id " + request + " not found"));
 
