@@ -22,3 +22,11 @@ services:
       - ./flyway:/flyway/sql
     depends_on:
       - postgres
+
+  redis:
+    container_name: biometric-service-redis
+    image: bitnami/redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
