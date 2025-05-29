@@ -1,6 +1,8 @@
 package com.pm.biometric_auth_service.controller;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
+import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
+import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.service.BiometricAuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +21,14 @@ public class BiometricAuthController {
     private final BiometricAuthService biometricAuthService;
 
     @PostMapping("/enable")
-    public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricAuthRequest request) {
+    public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
         return ResponseEntity.ok(biometricAuthService.enableBiometricAuth(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<BiometricSettingsResponse> biometricAuthLogin(@RequestParam Integer userId) {
-        return ResponseEntity.ok(biometricAuthService.biometricAuthLogin(userId));
+    public ResponseEntity<String> biometricAuthLogin(@RequestBody BiometricAuthRequest request) {
+        BiometricAuthResponse response = biometricAuthService.biometricAuthLogin(request);
+        return ResponseEntity.status(response.getStatus()).body(response.getContent());
     }
 
     @GetMapping("/status")
