@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BiometricSettingsRepository extends JpaRepository<BiometricSettings, Integer> {
     Optional<BiometricSettings> findByUserId(int userId);
+    Optional<BiometricSettings> findByUserIdAndDeviceInfo(Integer userId, String deviceInfo);
 }

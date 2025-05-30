@@ -5,9 +5,9 @@ import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.AppError;
-import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
 import com.pm.biometric_auth_service.service.impl.BiometricAuthServiceImpl;
 import com.pm.biometric_auth_service.utils.JwtTokenUtil;
+import com.pm.biometric_auth_service.validators.RegisterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +24,11 @@ public class BiometricAuthController {
     private final BiometricAuthServiceImpl biometricAuthService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
+    private final RegisterValidator registerValidator;
 
     @PostMapping("/enable")
     public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
+        registerValidator.validate(request);
         return ResponseEntity.ok(biometricAuthService.enableBiometricAuth(request));
     }
 

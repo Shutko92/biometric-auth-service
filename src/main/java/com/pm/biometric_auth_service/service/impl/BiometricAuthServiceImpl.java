@@ -82,6 +82,11 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
     }
 
     @Override
+    public Optional<BiometricSettings> findByUserIdAndDeviceInfo(BiometricRegisterRequest request) {
+        return settingsRepository.findByUserIdAndDeviceInfo(request.userId(), request.deviceInfo());
+    }
+
+    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         int userId = Integer.parseInt(username);

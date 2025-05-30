@@ -23,4 +23,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
                 exception.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<FieldsValidationError> catchValidationException(ValidationException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(new FieldsValidationError(HttpStatus.BAD_REQUEST.value(),
+                exception.getErrorFieldsMessages()), HttpStatus.BAD_REQUEST);
+    }
 }

@@ -17,4 +17,6 @@ public interface BiometricAuthService {
     BiometricAuthResponse biometricAuthLogin(BiometricAuthRequest request);
 
     Optional<BiometricSettings> findByUserId(Integer userId);
+
+    Optional<BiometricSettings> findByUserIdAndDeviceInfo(BiometricRegisterRequest request);
 }
