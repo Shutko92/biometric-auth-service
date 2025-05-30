@@ -5,14 +5,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Setter
 @Getter
 @ToString
 public class BiometricSettingsResponse {
-    Integer id;
-    Integer userId;
-    Boolean biometricEnabled;
-    LocalDateTime lastUsed;
-    String deviceInfo;
+    private Integer id;
+    private Integer userId;
+    private List<DeviceDto> devices;
+    private LocalDateTime lastUsed;
 }
 

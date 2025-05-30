@@ -24,8 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @PropertySource("secrets.properties")
 
 public class SecurityConfig {
-//    private final BiometricAuthService biometricAuthService;
-//    private final AuthenticationManager authenticationManager;
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean

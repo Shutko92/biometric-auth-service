@@ -1,8 +1,8 @@
 package com.pm.biometric_auth_service.utils;
 
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
-import com.pm.biometric_auth_service.model.BiometricSettings;
-import com.pm.biometric_auth_service.service.BiometricAuthService;
+import com.pm.biometric_auth_service.models.BiometricSettings;
+import com.pm.biometric_auth_service.services.BiometricAuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,8 +36,8 @@ public class JwtTokenUtil {
         Optional<BiometricSettings> settings = biometricAuthService
                 .findByUserId(userId);
         if (settings.isPresent()) {
+            claims.put("accountId", settings.get().getId());
             claims.put("userId", settings.get().getUserId());
-            claims.put("device", settings.get().getDeviceInfo());
         } else {
             throw new UserNotFoundException("User with Id " + userId + " not found");
         }
