@@ -1,4 +1,4 @@
-package com.pm.biometric_auth_service.service;
+package com.pm.biometric_auth_service.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

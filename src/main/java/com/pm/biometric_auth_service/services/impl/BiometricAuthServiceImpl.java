@@ -1,16 +1,16 @@
-package com.pm.biometric_auth_service.service.impl;
+package com.pm.biometric_auth_service.services.impl;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
-import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
-import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
-import com.pm.biometric_auth_service.model.BiometricSettings;
-import com.pm.biometric_auth_service.repository.BiometricSettingsRepository;
-import com.pm.biometric_auth_service.service.BiometricAuthService;
-import com.pm.biometric_auth_service.service.LoginManager;
+import com.pm.biometric_auth_service.models.BiometricSettings;
+import com.pm.biometric_auth_service.models.Device;
+import com.pm.biometric_auth_service.repositories.BiometricSettingsRepository;
+import com.pm.biometric_auth_service.services.BiometricAuthService;
+import com.pm.biometric_auth_service.services.DeviceService;
+import com.pm.biometric_auth_service.services.LoginManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -30,30 +31,40 @@ import java.util.stream.Collectors;
 public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetailsService {
     private final BiometricSettingsRepository settingsRepository;
     private final LoginManager loginManager;
+    private final DeviceService deviceService;
 
     @Override
-    public BiometricSettingsResponse enableBiometricAuth(BiometricRegisterRequest request) {
-        BiometricSettings settings = settingsRepository.save(BiometricSettings.builder()
-                .biometricEnabled(true)
+    public BiometricSettings enableBiometricAuth(BiometricRegisterRequest request) {
+        Optional<BiometricSettings> settingsOPtional = findByUserId(request.userId());
+        BiometricSettings settings = null;
+        settings = settingsOPtional.orElseGet(() -> BiometricSettings.builder()
+                .userId(request.userId())
+                .devices(new ArrayList<>())
+                .build());
+        Device device = Device.builder()
+                .account(settings)
                 .deviceInfo(request.deviceInfo())
-                .userId(request.userId()).build());
-        return BiometricSettingsMapper.toDto(settings);
+                .biometricEnabled(true)
+                .build();
+        settings.getDevices().add(device);
+        return settingsRepository.save(settings);
     }
 
     @Override
     @Transactional
     public String getBiometricAuthStatus(Integer userId) {
-        BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
-                new IllegalAuthStateException("User with Id " + userId + " not found"));
-        String status;
-        if (settings.getBiometricEnabled()) {
-            status = "Active";
-        } else {
-            status = "Inactive";
-        }
-        settings.setLastUsed(null);
-        settingsRepository.save(settings);
-        return String.format("Status of the user with Id %d is: %s", userId, status);
+//        BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
+//                new IllegalAuthStateException("User with Id " + userId + " not found"));
+//        String status;
+//        if (settings.getBiometricEnabled()) {
+//            status = "Active";
+//        } else {
+//            status = "Inactive";
+//        }
+//        settings.setLastUsed(null);
+//        settingsRepository.save(settings);
+//        return String.format("Status of the user with Id %d is: %s", userId, status);
+        return null;
     }
 
     @Override
@@ -82,18 +93,14 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
     }
 
     @Override
-    public Optional<BiometricSettings> findByUserIdAndDeviceInfo(BiometricRegisterRequest request) {
-        return settingsRepository.findByUserIdAndDeviceInfo(request.userId(), request.deviceInfo());
-    }
-
-    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         int userId = Integer.parseInt(username);
         BiometricSettings settings = findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with Id " + userId + " not found"));
-        return new org.springframework.security.core.userdetails.User(
-                username, settings.getDeviceInfo(), getAuthority(List.of("ROLE_USER")));
+        return null;
+//        return new org.springframework.security.core.userdetails.User(
+//                username, settings.getDeviceInfo(), getAuthority(List.of("ROLE_USER")));
     }
 
     public Collection<? extends GrantedAuthority> getAuthority(List<String> roles) {

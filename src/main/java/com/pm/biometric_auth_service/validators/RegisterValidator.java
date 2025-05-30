@@ -2,8 +2,9 @@ package com.pm.biometric_auth_service.validators;
 
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.exception.ValidationException;
-import com.pm.biometric_auth_service.model.BiometricSettings;
-import com.pm.biometric_auth_service.service.BiometricAuthService;
+import com.pm.biometric_auth_service.models.BiometricSettings;
+import com.pm.biometric_auth_service.models.Device;
+import com.pm.biometric_auth_service.services.BiometricAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,12 @@ public class RegisterValidator {
 
     public void validate(BiometricRegisterRequest request) {
         List<String> errorMessages = new ArrayList<>();
-        Optional<BiometricSettings> settings = biometricAuthService.findByUserIdAndDeviceInfo(request);
+        Optional<BiometricSettings> settings = biometricAuthService.findByUserId(request.userId());
         if (settings.isPresent()) {
-            errorMessages.add(String.format("Учётная запись для этого устройства и пользователя с id: %d уже существует", request.userId()));
+            Optional<Device> device = settings.get().getDevices().stream().filter(d -> d.getDeviceInfo().equals(request.deviceInfo())).findFirst();
+            if (device.isPresent()) {
+                errorMessages.add(String.format("Учётная запись для этого устройства и пользователя с id: %d уже существует", request.userId()));
+            }
         }
         if (request.userId() == null) {
             errorMessages.add("Нет информации о userId.");

@@ -1,20 +1,15 @@
-package com.pm.biometric_auth_service.model;
+package com.pm.biometric_auth_service.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,14 +21,16 @@ import java.time.LocalDateTime;
 public class BiometricSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
     @Column(name = "user_id", nullable = false)
     private Integer userId;
-    @Column(name = "biometric_enabled", nullable = false)
-    private Boolean biometricEnabled;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Device> devices;
+
     @Column(name = "last_used")
     @UpdateTimestamp
     private LocalDateTime lastUsed;
-    @Column(name = "device_info")
-    private String deviceInfo;
 }
