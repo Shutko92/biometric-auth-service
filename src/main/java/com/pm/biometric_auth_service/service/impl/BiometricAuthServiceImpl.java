@@ -41,6 +41,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
     }
 
     @Override
+    @Transactional
     public String getBiometricAuthStatus(Integer userId) {
         BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
                 new IllegalAuthStateException("User with Id " + userId + " not found"));
@@ -50,7 +51,8 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
         } else {
             status = "Inactive";
         }
-
+        settings.setLastUsed(null);
+        settingsRepository.save(settings);
         return String.format("Status of the user with Id %d is: %s", userId, status);
     }
 
@@ -69,7 +71,8 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
         loginManager.resetAttempts(request.userId());
         BiometricSettings settings = settingsRepository.findByUserId(request.userId()).orElseThrow(() ->
                 new IllegalAuthStateException("User with Id " + request + " not found"));
-
+        settings.setLastUsed(null);
+        settingsRepository.save(settings);
         return new BiometricAuthResponse("token", 200);
     }
 

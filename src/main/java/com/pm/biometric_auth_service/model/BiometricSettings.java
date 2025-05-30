@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +32,7 @@ public class BiometricSettings {
     @Column(name = "biometric_enabled", nullable = false)
     private Boolean biometricEnabled;
     @Column(name = "last_used")
+    @UpdateTimestamp
     private LocalDateTime lastUsed;
     @Column(name = "device_info")
     private String deviceInfo;
