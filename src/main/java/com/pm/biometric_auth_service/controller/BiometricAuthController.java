@@ -5,6 +5,7 @@ import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.AppError;
+import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
 import com.pm.biometric_auth_service.service.impl.BiometricAuthServiceImpl;
 import com.pm.biometric_auth_service.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class BiometricAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> biometricAuthLogin(@RequestBody BiometricAuthRequest request) {
+    public ResponseEntity<BiometricAuthResponse> biometricAuthLogin(@RequestBody BiometricAuthRequest request) {
         return ResponseEntity.ok(biometricAuthService.biometricAuthLogin(request));
     }
 
