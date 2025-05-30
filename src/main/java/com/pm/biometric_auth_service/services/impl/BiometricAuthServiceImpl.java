@@ -98,9 +98,8 @@ public class BiometricAuthServiceImpl implements BiometricAuthService, UserDetai
         int userId = Integer.parseInt(username);
         BiometricSettings settings = findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with Id " + userId + " not found"));
-        return null;
-//        return new org.springframework.security.core.userdetails.User(
-//                username, settings.getDeviceInfo(), getAuthority(List.of("ROLE_USER")));
+        return new org.springframework.security.core.userdetails.User(
+                username, null, getAuthority(List.of("ROLE_USER")));
     }
 
     public Collection<? extends GrantedAuthority> getAuthority(List<String> roles) {
