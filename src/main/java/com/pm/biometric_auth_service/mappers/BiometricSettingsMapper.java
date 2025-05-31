@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Component
 public class BiometricSettingsMapper {
 
-    public BiometricSettingsResponse getSettingsDto(BiometricSettings settings) {
+    public static BiometricSettingsResponse getSettingsDto(BiometricSettings settings) {
         BiometricSettingsResponse response = new BiometricSettingsResponse();
         response.setId(settings.getId());
         response.setUserId(settings.getUserId());
@@ -23,7 +23,7 @@ public class BiometricSettingsMapper {
         return response;
     }
 
-    public DeviceDto getDeviceDto(Device device) {
+    public static DeviceDto getDeviceDto(Device device) {
         DeviceDto deviceDto = new DeviceDto();
         deviceDto.setId(device.getId());
         deviceDto.setAccountId(device.getAccount().getId());

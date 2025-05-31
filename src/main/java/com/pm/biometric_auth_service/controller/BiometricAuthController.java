@@ -4,8 +4,8 @@ import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.dto.JwtResponse;
-import com.pm.biometric_auth_service.mappers.BiometricSettingsMapper;
-import com.pm.biometric_auth_service.services.impl.BiometricAuthServiceImpl;
+
+import com.pm.biometric_auth_service.services.BiometricAuthService;
 import com.pm.biometric_auth_service.utils.JwtTokenUtil;
 import com.pm.biometric_auth_service.validators.RegisterValidator;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth/biometric")
 @RequiredArgsConstructor
 public class BiometricAuthController {
-    private final BiometricAuthServiceImpl biometricAuthService;
+    private final BiometricAuthService biometricAuthService;
     private final JwtTokenUtil jwtTokenUtil;
-
     private final RegisterValidator registerValidator;
-    private final BiometricSettingsMapper mapper;
 
     @PostMapping("/enable")
-    public BiometricSettingsResponse enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
+    public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
         registerValidator.validate(request);
-        return mapper.getSettingsDto(biometricAuthService.enableBiometricAuth(request));
+        return ResponseEntity.ok(biometricAuthService.enableBiometricAuth(request));
+    }
+
+    @PostMapping("/request-otp")
+    public ResponseEntity<String> requestBiometricAuth(@RequestBody BiometricRegisterRequest request) {
+        return ResponseEntity.ok(biometricAuthService.requestBiometricAuth(request));
     }
 
 //    @PostMapping("/enable")

@@ -2,11 +2,15 @@ package com.pm.biometric_auth_service.services.impl;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
+import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
+import com.pm.biometric_auth_service.mappers.BiometricSettingsMapper;
 import com.pm.biometric_auth_service.models.BiometricSettings;
 import com.pm.biometric_auth_service.models.Device;
 import com.pm.biometric_auth_service.repositories.BiometricSettingsRepository;
+import com.pm.biometric_auth_service.service.OtpService;
+import com.pm.biometric_auth_service.service.SmsService;
 import com.pm.biometric_auth_service.services.BiometricAuthService;
 import com.pm.biometric_auth_service.services.DeviceService;
 import com.pm.biometric_auth_service.services.LoginManager;
@@ -29,11 +33,16 @@ import java.util.stream.Collectors;
 public class BiometricAuthServiceImpl implements BiometricAuthService {
     private final BiometricSettingsRepository settingsRepository;
     private final LoginManager loginManager;
-
     private final DeviceService deviceService;
+    private final OtpService otpService;
+    private final SmsService smsService;
 
     @Override
-    public BiometricSettings enableBiometricAuth(BiometricRegisterRequest request) {
+    public BiometricSettingsResponse enableBiometricAuth(BiometricRegisterRequest request) {
+        if (!otpService.validateOtp(request.phoneNumber(), request.otp())) {
+            throw new IllegalAuthStateException("Invalid OTP");
+        }
+
         Optional<BiometricSettings> settingsOPtional = findByUserId(request.userId());
         BiometricSettings settings = null;
         settings = settingsOPtional.orElseGet(() -> BiometricSettings.builder()
@@ -46,7 +55,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
                 .biometricEnabled(true)
                 .build();
         settings.getDevices().add(device);
-        return settingsRepository.save(settings);
+        return BiometricSettingsMapper.getSettingsDto(settingsRepository.save(settings));
     }
 
     @Override
@@ -82,6 +91,13 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
     @Override
     public Optional<BiometricSettings> findByUserId(Integer userId) {
         return settingsRepository.findByUserId(userId);
+    }
+
+    @Override
+    public String requestBiometricAuth(BiometricRegisterRequest request) {
+        String otp = otpService.generateOtp(request.phoneNumber());
+        smsService.sendSms(request.phoneNumber(), "Your OTP is: " + otp);
+        return "OTP sent successfully";
     }
 
     private void checkDevice(BiometricSettings settings, String deviceInfo) {
