@@ -11,11 +11,13 @@ import java.util.Optional;
 
 public interface BiometricAuthService {
 
-    BiometricSettings enableBiometricAuth(BiometricRegisterRequest request);
+    BiometricSettingsResponse enableBiometricAuth(BiometricRegisterRequest request);
 
     String getBiometricAuthStatus(Integer userId);
 
     UserDetails biometricAuthLogin(BiometricAuthRequest request);
 
     Optional<BiometricSettings> findByUserId(Integer userId);
+
+    String requestBiometricAuth(BiometricRegisterRequest request);
 }
