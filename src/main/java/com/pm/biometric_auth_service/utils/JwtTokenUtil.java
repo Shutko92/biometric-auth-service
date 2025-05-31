@@ -33,8 +33,7 @@ public class JwtTokenUtil {
         List<String> rolesList = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         claims.put("roles", rolesList);
-        Optional<BiometricSettings> settings = biometricAuthService
-                .findByUserId(userId);
+        Optional<BiometricSettings> settings = biometricAuthService.findByUserId(userId);
         if (settings.isPresent()) {
             claims.put("accountId", settings.get().getId());
             claims.put("userId", settings.get().getUserId());
