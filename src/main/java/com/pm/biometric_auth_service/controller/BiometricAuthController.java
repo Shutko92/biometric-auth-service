@@ -63,12 +63,6 @@ public class BiometricAuthController {
         return ResponseEntity.ok(biometricAuthService.requestBiometricAuth(request));
     }
 
-    //    @PostMapping("/enable")
-//    public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
-//        registerValidator.validate(request);
-//        return ResponseEntity.ok(mapper.getSettingsDto(biometricAuthService.enableBiometricAuth(request)));
-//    }
-
     @Operation(
             summary = "Authenticate using biometrics",
             description = "Performs biometric authentication and returns a JWT token upon success"
@@ -94,13 +88,13 @@ public class BiometricAuthController {
             description = "Retrieves the biometric authentication status for a user"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Status retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "200", description = "Biometric authentication enabled",
+                    content = @Content(schema = @Schema(implementation = BiometricSettingsResponse.class))),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/status")
-    public ResponseEntity<String> getBiometricAuthStatus(@Parameter(
+    public ResponseEntity<BiometricSettingsResponse> getBiometricAuthStatus(@Parameter(
             name = "userId",
             description = "ID of the user to check status for",
             required = true,
@@ -108,11 +102,6 @@ public class BiometricAuthController {
     )@RequestParam Integer userId) {
         return ResponseEntity.ok(biometricAuthService.getBiometricAuthStatus(userId));
     }
-
-//    @GetMapping("/status")
-//    public ResponseEntity<BiometricSettingsResponse> getBiometricAuthStatus(@RequestParam Integer userId) {
-//        return ResponseEntity.ok(biometricAuthService.getBiometricAuthStatus(userId));
-//    }
 
 
 }
