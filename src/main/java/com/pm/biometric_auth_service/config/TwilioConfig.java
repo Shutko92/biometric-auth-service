@@ -1,4 +1,4 @@
-package com.pm.biometric_auth_service.configs;
+package com.pm.biometric_auth_service.config;
 
 import com.twilio.http.TwilioRestClient;
 import org.springframework.beans.factory.annotation.Value;

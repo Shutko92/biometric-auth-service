@@ -1,8 +1,8 @@
-package com.pm.biometric_auth_service.utils;
+package com.pm.biometric_auth_service.util;
 
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
-import com.pm.biometric_auth_service.models.BiometricSettings;
-import com.pm.biometric_auth_service.services.BiometricAuthService;
+import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.service.BiometricAuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

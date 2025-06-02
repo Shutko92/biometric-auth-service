@@ -1,10 +1,9 @@
-package com.pm.biometric_auth_service.services;
+package com.pm.biometric_auth_service.service;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
-import com.pm.biometric_auth_service.dto.BiometricAuthResponse;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
-import com.pm.biometric_auth_service.models.BiometricSettings;
+import com.pm.biometric_auth_service.model.BiometricSettings;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;

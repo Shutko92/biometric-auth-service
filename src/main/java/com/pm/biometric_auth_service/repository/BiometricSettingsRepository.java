@@ -1,6 +1,6 @@
-package com.pm.biometric_auth_service.repositories;
+package com.pm.biometric_auth_service.repository;
 
-import com.pm.biometric_auth_service.models.BiometricSettings;
+import com.pm.biometric_auth_service.model.BiometricSettings;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

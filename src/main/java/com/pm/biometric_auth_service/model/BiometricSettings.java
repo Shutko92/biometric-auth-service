@@ -1,4 +1,4 @@
-package com.pm.biometric_auth_service.models;
+package com.pm.biometric_auth_service.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.pm.biometric_auth_service.repositories;
+package com.pm.biometric_auth_service.repository;
 
-import com.pm.biometric_auth_service.models.Device;
+import com.pm.biometric_auth_service.model.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

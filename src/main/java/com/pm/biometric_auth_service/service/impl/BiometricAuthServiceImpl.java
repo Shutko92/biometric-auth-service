@@ -1,20 +1,15 @@
-package com.pm.biometric_auth_service.services.impl;
+package com.pm.biometric_auth_service.service.impl;
 
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
-import com.pm.biometric_auth_service.mappers.BiometricSettingsMapper;
-import com.pm.biometric_auth_service.models.BiometricSettings;
-import com.pm.biometric_auth_service.models.Device;
-import com.pm.biometric_auth_service.repositories.BiometricSettingsRepository;
-import com.pm.biometric_auth_service.service.OtpService;
-import com.pm.biometric_auth_service.service.SmsService;
-import com.pm.biometric_auth_service.services.BiometricAuthService;
-import com.pm.biometric_auth_service.services.DeviceService;
-import com.pm.biometric_auth_service.services.LoginManager;
-import com.pm.biometric_auth_service.utils.JwtTokenUtil;
+import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
+import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.model.Device;
+import com.pm.biometric_auth_service.repository.BiometricSettingsRepository;
+import com.pm.biometric_auth_service.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

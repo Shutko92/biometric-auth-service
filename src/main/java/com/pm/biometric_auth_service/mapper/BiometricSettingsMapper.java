@@ -1,9 +1,9 @@
-package com.pm.biometric_auth_service.mappers;
+package com.pm.biometric_auth_service.mapper;
 
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.dto.DeviceDto;
-import com.pm.biometric_auth_service.models.BiometricSettings;
-import com.pm.biometric_auth_service.models.Device;
+import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.model.Device;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
