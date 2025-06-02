@@ -1,6 +1,6 @@
-package com.pm.biometric_auth_service.configs;
+package com.pm.biometric_auth_service.config;
 
-import com.pm.biometric_auth_service.utils.JwtTokenUtil;
+import com.pm.biometric_auth_service.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

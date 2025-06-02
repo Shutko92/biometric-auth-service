@@ -1,10 +1,10 @@
-package com.pm.biometric_auth_service.validators;
+package com.pm.biometric_auth_service.validator;
 
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.exception.ValidationException;
-import com.pm.biometric_auth_service.models.BiometricSettings;
-import com.pm.biometric_auth_service.models.Device;
-import com.pm.biometric_auth_service.services.BiometricAuthService;
+import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.model.Device;
+import com.pm.biometric_auth_service.service.BiometricAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

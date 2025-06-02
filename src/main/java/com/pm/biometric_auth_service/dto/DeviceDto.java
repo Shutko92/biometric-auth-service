@@ -1,6 +1,5 @@
 package com.pm.biometric_auth_service.dto;
 
-import com.pm.biometric_auth_service.models.BiometricSettings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

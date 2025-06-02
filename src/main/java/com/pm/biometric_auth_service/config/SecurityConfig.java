@@ -1,4 +1,4 @@
-package com.pm.biometric_auth_service.configs;
+package com.pm.biometric_auth_service.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

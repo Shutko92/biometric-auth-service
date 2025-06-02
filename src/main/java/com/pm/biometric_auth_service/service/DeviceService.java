@@ -1,7 +1,7 @@
-package com.pm.biometric_auth_service.services;
+package com.pm.biometric_auth_service.service;
 
-import com.pm.biometric_auth_service.models.Device;
-import com.pm.biometric_auth_service.repositories.DeviceRepository;
+import com.pm.biometric_auth_service.model.Device;
+import com.pm.biometric_auth_service.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

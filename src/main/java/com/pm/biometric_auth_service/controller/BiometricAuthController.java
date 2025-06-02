@@ -5,9 +5,9 @@ import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
 import com.pm.biometric_auth_service.dto.JwtResponse;
 
-import com.pm.biometric_auth_service.services.BiometricAuthService;
-import com.pm.biometric_auth_service.utils.JwtTokenUtil;
-import com.pm.biometric_auth_service.validators.RegisterValidator;
+import com.pm.biometric_auth_service.service.BiometricAuthService;
+import com.pm.biometric_auth_service.util.JwtTokenUtil;
+import com.pm.biometric_auth_service.validator.RegisterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
