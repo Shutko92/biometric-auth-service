@@ -52,6 +52,17 @@ public class BiometricAuthController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    @Operation(
+            summary = "Get biometric authentication status",
+            description = "Retrieves the biometric authentication status for a user"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Status retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/status")
     public ResponseEntity<String> getBiometricAuthStatus(@Parameter(
             name = "userId",
             description = "ID of the user to check status for",
