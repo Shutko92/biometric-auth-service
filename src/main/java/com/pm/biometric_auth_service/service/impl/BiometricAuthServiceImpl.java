@@ -3,6 +3,7 @@ package com.pm.biometric_auth_service.service.impl;
 import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
 import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
 import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
+import com.pm.biometric_auth_service.dto.DeviceDto;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
 import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
@@ -84,6 +85,15 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
         String otp = otpService.generateOtp(request.phoneNumber());
         smsService.sendSms(request.phoneNumber(), "Your OTP is: " + otp);
         return "OTP sent successfully";
+    }
+
+    @Override
+    @Transactional
+    public DeviceDto changeDeviceEnableStatus (BiometricAuthRequest request) {
+        Integer id = settingsRepository.findIdByUserId(request.userId())
+                .orElseThrow(() -> new UserNotFoundException("User with Id " + request.userId() + " not found"));
+        Device device = deviceService.changeDeviceEnableStatus(id, request.deviceInfo(), request.authenticated());
+        return BiometricSettingsMapper.getDeviceDto(device);
     }
 
     private void checkDevice(BiometricSettings settings, String deviceInfo) {

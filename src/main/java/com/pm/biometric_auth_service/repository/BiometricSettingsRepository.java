@@ -10,4 +10,7 @@ public interface BiometricSettingsRepository extends JpaRepository<BiometricSett
 
     @Query("select bs from BiometricSettings bs join fetch bs.devices where bs.userId = :userId")
     Optional<BiometricSettings> findByUserId(int userId);
+
+    @Query("select bs.id from BiometricSettings bs where bs.userId = :userId")
+    Optional<Integer> findIdByUserId(int userId);
 }
