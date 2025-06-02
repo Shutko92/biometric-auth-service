@@ -3,6 +3,7 @@ package com.pm.biometric_auth_service.controller;
 import com.pm.biometric_auth_service.dto.*;
 
 import com.pm.biometric_auth_service.service.BiometricAuthService;
+import com.pm.biometric_auth_service.service.DeviceService;
 import com.pm.biometric_auth_service.util.JwtTokenUtil;
 import com.pm.biometric_auth_service.validator.RegisterValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -103,5 +104,21 @@ public class BiometricAuthController {
         return ResponseEntity.ok(biometricAuthService.getBiometricAuthStatus(userId));
     }
 
-
+    @Operation(
+            summary = "Change device enabled status",
+            description = "Enables/disables biometrics on a specific device"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Device description",
+                    content = @Content(schema = @Schema(implementation = DeviceDto.class))),
+            @ApiResponse(responseCode = "404", description = "User or device not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping("device_enabled")
+    public ResponseEntity<DeviceDto> changeDeviceEnableStatus(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Data on enabling biometrics on a specific device",
+            required = true,
+            content = @Content(schema = @Schema(implementation = BiometricAuthRequest.class))) @RequestBody BiometricAuthRequest request) {
+        return ResponseEntity.ok(biometricAuthService.changeDeviceEnableStatus(request));
+    }
 }
