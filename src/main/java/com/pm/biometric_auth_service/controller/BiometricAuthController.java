@@ -1,9 +1,6 @@
 package com.pm.biometric_auth_service.controller;
 
-import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
-import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
-import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
-import com.pm.biometric_auth_service.dto.JwtResponse;
+import com.pm.biometric_auth_service.dto.*;
 
 import com.pm.biometric_auth_service.service.BiometricAuthService;
 import com.pm.biometric_auth_service.util.JwtTokenUtil;
@@ -66,7 +63,7 @@ public class BiometricAuthController {
         return ResponseEntity.ok(biometricAuthService.requestBiometricAuth(request));
     }
 
-//    @PostMapping("/enable")
+    //    @PostMapping("/enable")
 //    public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@RequestBody BiometricRegisterRequest request) {
 //        registerValidator.validate(request);
 //        return ResponseEntity.ok(mapper.getSettingsDto(biometricAuthService.enableBiometricAuth(request)));
@@ -111,4 +108,11 @@ public class BiometricAuthController {
     )@RequestParam Integer userId) {
         return ResponseEntity.ok(biometricAuthService.getBiometricAuthStatus(userId));
     }
+
+//    @GetMapping("/status")
+//    public ResponseEntity<BiometricSettingsResponse> getBiometricAuthStatus(@RequestParam Integer userId) {
+//        return ResponseEntity.ok(biometricAuthService.getBiometricAuthStatus(userId));
+//    }
+
+
 }

@@ -12,7 +12,7 @@ public interface BiometricAuthService {
 
     BiometricSettingsResponse enableBiometricAuth(BiometricRegisterRequest request);
 
-    String getBiometricAuthStatus(Integer userId);
+    BiometricSettingsResponse getBiometricAuthStatus(Integer userId);
 
     UserDetails biometricAuthLogin(BiometricAuthRequest request);
 

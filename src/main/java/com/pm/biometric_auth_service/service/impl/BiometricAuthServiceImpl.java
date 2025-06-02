@@ -54,23 +54,14 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
     }
 
     @Override
-    @Transactional
-    public String getBiometricAuthStatus(Integer userId) {
-//        BiometricSettings settings = settingsRepository.findByUserId(userId).orElseThrow(() ->
-//                new IllegalAuthStateException("User with Id " + userId + " not found"));
-//        String status;
-//        if (settings.getBiometricEnabled()) {
-//            status = "Active";
-//        } else {
-//            status = "Inactive";
-//        }
-//        settings.setLastUsed(null);
-//        settingsRepository.save(settings);
-//        return String.format("Status of the user with Id %d is: %s", userId, status);
-        return null;
+    public BiometricSettingsResponse getBiometricAuthStatus(Integer userId) {
+        BiometricSettings settings = findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with Id " + userId + " not found"));
+        return BiometricSettingsMapper.getSettingsDto(settings);
     }
 
     @Override
+    @Transactional
     public UserDetails biometricAuthLogin(BiometricAuthRequest request) {
         BiometricSettings settings = findByUserId(request.userId())
                 .orElseThrow(() -> new UserNotFoundException("User with Id " + request.userId() + " not found"));

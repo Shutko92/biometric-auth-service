@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
-@Component
 public class BiometricSettingsMapper {
 
     public static BiometricSettingsResponse getSettingsDto(BiometricSettings settings) {
