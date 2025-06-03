@@ -12,7 +12,7 @@ import java.time.Duration;
 public class OtpService {
     private static final int OTP_LENGTH = 6;
     private static final int OTP_EXPIRY_MINUTES = 5;
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     public String generateOtp(String phoneNumber) {
         String otp = RandomStringUtils.randomNumeric(OTP_LENGTH);

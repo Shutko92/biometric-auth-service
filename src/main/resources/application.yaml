@@ -22,10 +22,5 @@ spring:
         format_sql: true
 #    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-twilio:
-  account-sid: ACd3bad4d832a2c3a4e5f6g7h8i9j0k1l2m
-  auth-token: abc0d1ef23gh456ij789klm
-  phone-number: +14155238999
-
   liquibase:
     enabled: true
