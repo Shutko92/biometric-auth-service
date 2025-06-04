@@ -13,8 +13,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> catchIllegalAuthStateException(IllegalAuthStateException exception) {
         log.error(exception.getMessage(), exception);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                exception.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
