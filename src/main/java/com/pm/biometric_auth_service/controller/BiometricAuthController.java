@@ -1,11 +1,10 @@
 package com.pm.biometric_auth_service.controller;
 
 import com.pm.biometric_auth_service.dto.*;
-
+import com.pm.biometric_auth_service.exception.AppError;
 import com.pm.biometric_auth_service.service.BiometricAuthService;
-import com.pm.biometric_auth_service.service.DeviceService;
 import com.pm.biometric_auth_service.util.JwtTokenUtil;
-import com.pm.biometric_auth_service.validator.RegisterValidator;
+import com.pm.biometric_auth_service.validator.FieldsValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class BiometricAuthController {
     private final BiometricAuthService biometricAuthService;
     private final JwtTokenUtil jwtTokenUtil;
-    private final RegisterValidator registerValidator;
+    private final FieldsValidator fieldsValidator;
 
     @Operation(
             summary = "Enable biometric authentication",
@@ -34,15 +33,19 @@ public class BiometricAuthController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Biometric authentication enabled",
                     content = @Content(schema = @Schema(implementation = BiometricSettingsResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = AppError.class)))
     })
     @PostMapping("/enable")
     public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Biometric registration request",
             required = true,
             content = @Content(schema = @Schema(implementation = BiometricRegisterRequest.class))) @RequestBody BiometricRegisterRequest request) {
-        registerValidator.validate(request);
+        fieldsValidator.registerValidate(request);
         return ResponseEntity.ok(biometricAuthService.enableBiometricAuth(request));
     }
 
@@ -52,16 +55,22 @@ public class BiometricAuthController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OTP generated successfully",
-                    content = @Content(schema = @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+                    content = @Content(schema = @Schema(implementation = OtpResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = AppError.class)))
     })
     @PostMapping("/request-otp")
-    public ResponseEntity<String> requestBiometricAuth(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public ResponseEntity<OtpResponse> requestBiometricAuth(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Biometric registration request",
             required = true,
             content = @Content(schema = @Schema(implementation = BiometricRegisterRequest.class)))@RequestBody BiometricRegisterRequest request) {
-        return ResponseEntity.ok(biometricAuthService.requestBiometricAuth(request));
+        fieldsValidator.registerValidate(request);
+        String otp = biometricAuthService.requestBiometricAuth(request);
+        return ResponseEntity.ok(new OtpResponse(otp));
     }
 
     @Operation(
@@ -70,15 +79,18 @@ public class BiometricAuthController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Authentication successful",
-                    content = @Content(schema = @Schema(implementation = JwtResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Biometric authentication failed"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+                    content = @Content(schema = @Schema(implementation = OtpResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Biometric authentication failed",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = AppError.class)))
     })
     @PostMapping("/login")
     public ResponseEntity<?> biometricAuthLogin(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Biometric authentication credentials",
             required = true,
             content = @Content(schema = @Schema(implementation = BiometricAuthRequest.class))) @RequestBody BiometricAuthRequest request) {
+        fieldsValidator.authValidate(request);
         UserDetails userDetails = biometricAuthService.biometricAuthLogin(request);
         String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
@@ -91,8 +103,10 @@ public class BiometricAuthController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Biometric authentication enabled",
                     content = @Content(schema = @Schema(implementation = BiometricSettingsResponse.class))),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = AppError.class)))
     })
     @GetMapping("/status")
     public ResponseEntity<BiometricSettingsResponse> getBiometricAuthStatus(@Parameter(
@@ -111,14 +125,16 @@ public class BiometricAuthController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Device description",
                     content = @Content(schema = @Schema(implementation = DeviceDto.class))),
-            @ApiResponse(responseCode = "404", description = "User or device not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "404", description = "User or device not found",
+                    content = @Content(schema = @Schema(implementation = AppError.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = AppError.class)))
     })
     @PostMapping("device_enabled")
     public ResponseEntity<DeviceDto> changeDeviceEnableStatus(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Data on enabling biometrics on a specific device",
             required = true,
-            content = @Content(schema = @Schema(implementation = BiometricAuthRequest.class))) @RequestBody BiometricAuthRequest request) {
+            content = @Content(schema = @Schema(implementation = DeviceStatusChangeRequest.class))) @RequestBody DeviceStatusChangeRequest request) {
         return ResponseEntity.ok(biometricAuthService.changeDeviceEnableStatus(request));
     }
 }

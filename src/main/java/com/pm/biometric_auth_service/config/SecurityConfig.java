@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorise -> authorise
-  //                      .requestMatchers("/api/auth/biometric/enable").authenticated()
+//                        .requestMatchers("/api/auth/biometric/enable").authenticated()
+//                        .requestMatchers("/api/auth/biometric/request-otp").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
