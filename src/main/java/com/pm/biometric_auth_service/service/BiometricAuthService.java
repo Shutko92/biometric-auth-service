@@ -1,9 +1,6 @@
 package com.pm.biometric_auth_service.service;
 
-import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
-import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
-import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
-import com.pm.biometric_auth_service.dto.DeviceDto;
+import com.pm.biometric_auth_service.dto.*;
 import com.pm.biometric_auth_service.model.BiometricSettings;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,5 +18,5 @@ public interface BiometricAuthService {
 
     String requestBiometricAuth(BiometricRegisterRequest request);
 
-    DeviceDto changeDeviceEnableStatus (BiometricAuthRequest request);
+    DeviceDto changeDeviceEnableStatus (DeviceStatusChangeRequest request);
 }

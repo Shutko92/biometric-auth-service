@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record BiometricRegisterRequest( @Schema(
         description = "Device identification information",
         example = "Google Pixel 7 Android 13",
-        required = false
+        required = true
 )String deviceInfo, @Schema(
         description = "User ID for registration",
         example = "12345",
