@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth/biometric")
+@RequestMapping("/api/v1/auth/biometric")
 @RequiredArgsConstructor
 @Tag(name = "Biometric Authentication", description = "Endpoints for managing biometric authentication")
 public class BiometricAuthController {
