@@ -57,11 +57,6 @@ public class JwtTokenUtil {
         return Integer.parseInt(username);
     }
 
-    // TODO: проверить, будет ли работать.
-    public Integer getUserIdFromToken2(String token) {
-        return getAllClaimsFromToken(token).get("userId", Integer.class);
-    }
-
     public String getDeviceInfoFromToken(String token) {
         return getAllClaimsFromToken(token).get("device", String.class);
     }

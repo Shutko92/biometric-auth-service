@@ -1,9 +1,6 @@
 package com.pm.biometric_auth_service.service.impl;
 
-import com.pm.biometric_auth_service.dto.BiometricAuthRequest;
-import com.pm.biometric_auth_service.dto.BiometricRegisterRequest;
-import com.pm.biometric_auth_service.dto.BiometricSettingsResponse;
-import com.pm.biometric_auth_service.dto.DeviceDto;
+import com.pm.biometric_auth_service.dto.*;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
 import com.pm.biometric_auth_service.model.BiometricSettings;
@@ -170,14 +167,14 @@ class BiometricAuthServiceImplTest {
         when(otpService.generateOtp(request.phoneNumber())).thenReturn(otp);
 
         String result = biometricAuthService.requestBiometricAuth(request);
-
-        assertEquals("OTP sent successfully", result);
+        System.out.println(result);
+        assertEquals("OTP sent successfully: " + otp, result);
         verify(smsService).sendSms(request.phoneNumber(), "Your OTP is: " + otp);
     }
 
     @Test
     void changeDeviceEnableStatus_UserNotFound_ThrowsException() {
-        BiometricAuthRequest request = new BiometricAuthRequest("deviceInfo",1,true);
+        DeviceStatusChangeRequest request = new DeviceStatusChangeRequest("deviceInfo",1,true);
         when(settingsRepository.findIdByUserId(request.userId())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
@@ -186,21 +183,21 @@ class BiometricAuthServiceImplTest {
 
     @Test
     void changeDeviceEnableStatus_Success_ReturnsDeviceDto() {
-        BiometricAuthRequest request = new BiometricAuthRequest("deviceInfo",1,true);
+        DeviceStatusChangeRequest request = new DeviceStatusChangeRequest("deviceInfo",1,true);
         Integer settingsId = 100;
         Device device = new Device();
         BiometricSettings settings = new BiometricSettings();
         device.setAccount(settings);
         when(settingsRepository.findIdByUserId(request.userId())).thenReturn(Optional.of(settingsId));
         when(deviceService.changeDeviceEnableStatus(
-                settingsId, request.deviceInfo(), request.authenticated()
+                settingsId, request.deviceInfo(), request.enabled()
         )).thenReturn(device);
 
         DeviceDto result = biometricAuthService.changeDeviceEnableStatus(request);
 
         assertNotNull(result);
         verify(deviceService).changeDeviceEnableStatus(
-                settingsId, request.deviceInfo(), request.authenticated()
+                settingsId, request.deviceInfo(), request.enabled()
         );
     }
 }
