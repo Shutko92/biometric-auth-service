@@ -5,7 +5,7 @@ services:
     container_name: biometric-service-postgres
     image: postgres:13
     domainname: postgres
-    #    restart: always
+
     environment:
       POSTGRES_DB: biometric_service_postgres
       POSTGRES_USER: postgres
