@@ -3,9 +3,7 @@ package com.pm.biometric_auth_service.config;
 import com.twilio.http.TwilioRestClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-//@Configuration
 public class TwilioConfig {
     @Value("${twilio.account-sid}")
     private String accountSid;

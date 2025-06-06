@@ -36,9 +36,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
             throw new IllegalAuthStateException("Invalid OTP");
         }
 
-        Optional<BiometricSettings> settingsOPtional = findByUserId(request.userId());
-        BiometricSettings settings = null;
-        settings = settingsOPtional.orElseGet(() -> BiometricSettings.builder()
+        BiometricSettings settings = findByUserId(request.userId()).orElseGet(() -> BiometricSettings.builder()
                 .userId(request.userId())
                 .devices(new ArrayList<>())
                 .build());
