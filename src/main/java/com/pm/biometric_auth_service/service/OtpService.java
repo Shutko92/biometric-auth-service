@@ -1,5 +1,6 @@
 package com.pm.biometric_auth_service.service;
 
+import com.pm.biometric_auth_service.util.Base64Service;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,9 +14,10 @@ public class OtpService {
     private static final int OTP_LENGTH = 6;
     private static final int OTP_EXPIRY_MINUTES = 5;
     private final StringRedisTemplate redisTemplate;
+    private final Base64Service base64Service;
 
     public String generateOtp(String phoneNumber) {
-        String otp = RandomStringUtils.randomNumeric(OTP_LENGTH);
+        String otp = base64Service.encode(RandomStringUtils.randomNumeric(OTP_LENGTH));
         redisTemplate.opsForValue().set(
                 phoneNumber,
                 otp,
@@ -26,6 +28,6 @@ public class OtpService {
 
     public boolean validateOtp(String phoneNumber, String otp) {
         String storedOtp = redisTemplate.opsForValue().get(phoneNumber);
-        return otp != null && otp.equals(storedOtp);
+        return otp != null && otp.equals(base64Service.decode(storedOtp));
     }
 }
