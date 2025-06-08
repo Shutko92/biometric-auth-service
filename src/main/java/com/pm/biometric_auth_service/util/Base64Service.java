@@ -1,0 +1,17 @@
+package com.pm.biometric_auth_service.util;
+import org.springframework.stereotype.Service;
+
+import java.util.Base64;
+
+@Service
+public class Base64Service {
+
+    public String encode(String plainText) {
+        return Base64.getEncoder().encodeToString(plainText.getBytes());
+    }
+
+    public String decode(String encodedText) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedText);
+        return new String(decodedBytes);
+    }
+}
