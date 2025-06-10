@@ -14,10 +14,9 @@ public class OtpService {
     private static final int OTP_LENGTH = 6;
     private static final int OTP_EXPIRY_MINUTES = 5;
     private final StringRedisTemplate redisTemplate;
-    private final Base64Service base64Service;
 
     public String generateOtp(String phoneNumber) {
-        String otp = base64Service.encode(RandomStringUtils.randomNumeric(OTP_LENGTH));
+        String otp = Base64Service.encode(RandomStringUtils.randomNumeric(OTP_LENGTH));
         redisTemplate.opsForValue().set(
                 phoneNumber,
                 otp,
@@ -28,6 +27,6 @@ public class OtpService {
 
     public boolean validateOtp(String phoneNumber, String otp) {
         String storedOtp = redisTemplate.opsForValue().get(phoneNumber);
-        return otp != null && otp.equals(base64Service.decode(storedOtp));
+        return otp != null && otp.equals(Base64Service.decode(storedOtp));
     }
 }
