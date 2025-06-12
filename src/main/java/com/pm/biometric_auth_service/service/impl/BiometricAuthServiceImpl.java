@@ -5,6 +5,7 @@ import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
 import com.pm.biometric_auth_service.mapper.BiometricSettingsMapper;
 import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.model.BiometryType;
 import com.pm.biometric_auth_service.model.Device;
 import com.pm.biometric_auth_service.repository.BiometricSettingsRepository;
 import com.pm.biometric_auth_service.service.*;
@@ -53,6 +54,7 @@ public class BiometricAuthServiceImpl implements BiometricAuthService {
                 .account(settings)
                 .deviceInfo(request.deviceInfo())
                 .biometricEnabled(true)
+                .biometryType(BiometryType.valueOf(request.biometricType()))
                 .build();
         settings.getDevices().add(device);
         return BiometricSettingsMapper.getSettingsDto(settingsRepository.save(settings));

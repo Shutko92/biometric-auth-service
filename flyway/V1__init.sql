@@ -9,4 +9,8 @@ CREATE TABLE IF NOT EXISTS devices (
     account_id INT NOT NULL REFERENCES biometric_settings (id),
     device_info VARCHAR(255),
     biometric_enabled BOOLEAN NOT NULL
+    biometry_type VARCHAR(10) NOT NULL;
 );
+
+ALTER TABLE devices ADD CONSTRAINT ch_bio_biometry_type
+    CHECK ( biometry_type in ('FINGERPRINT', 'FACE_ID'));
