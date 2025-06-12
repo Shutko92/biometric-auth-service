@@ -4,6 +4,7 @@ import com.pm.biometric_auth_service.dto.*;
 import com.pm.biometric_auth_service.exception.IllegalAuthStateException;
 import com.pm.biometric_auth_service.exception.UserNotFoundException;
 import com.pm.biometric_auth_service.model.BiometricSettings;
+import com.pm.biometric_auth_service.model.BiometryType;
 import com.pm.biometric_auth_service.model.Device;
 import com.pm.biometric_auth_service.repository.BiometricSettingsRepository;
 import com.pm.biometric_auth_service.service.DeviceService;
@@ -49,8 +50,7 @@ class BiometricAuthServiceImplTest {
     @Test
     void enableBiometricAuth_InvalidOtp_ThrowsException() {
         BiometricRegisterRequest request = new BiometricRegisterRequest(
-                "deviceInfo", 1,"1234567890","invalidOtp"
-        );
+                "deviceInfo", 1,"1234567890","invalidOtp", "FINGERPRINT");
         when(otpService.validateOtp(request.phoneNumber(), request.otp())).thenReturn(false);
 
         assertThrows(IllegalAuthStateException.class,
@@ -61,8 +61,7 @@ class BiometricAuthServiceImplTest {
     @Test
     void enableBiometricAuth_NewUser_CreatesSettings() {
         BiometricRegisterRequest request = new BiometricRegisterRequest(
-                "deviceInfo", 1,"1234567890","validOtp"
-        );
+                "deviceInfo", 1,"1234567890","validOtp", "FINGERPRINT");
         when(otpService.validateOtp(anyString(), anyString())).thenReturn(true);
         when(settingsRepository.findByUserId(request.userId())).thenReturn(Optional.empty());
 
@@ -95,6 +94,7 @@ class BiometricAuthServiceImplTest {
         settings.setDevices(Collections.singletonList(device));
         device.setAccount(settings);
         settings.setUserId(userId);
+        device.setBiometryType(BiometryType.FINGERPRINT);
         when(settingsRepository.findByUserId(userId)).thenReturn(Optional.of(settings));
 
         BiometricSettingsResponse response = biometricAuthService.getBiometricAuthStatus(userId);
@@ -161,15 +161,13 @@ class BiometricAuthServiceImplTest {
     @Test
     void requestBiometricAuth_SendsOtp() {
         BiometricRegisterRequest request = new BiometricRegisterRequest(
-                "deviceInfo", 1,"1234567890","validOtp"
-        );
-        String otp = "123456";
-        when(otpService.generateOtp(request.phoneNumber())).thenReturn(otp);
-
+                "deviceInfo", 1,"1234567890","validOtp", "FINGERPRINT");
+        String encodedOtp = "MTIzNDU2";
+        when(otpService.generateOtp(request.phoneNumber())).thenReturn(encodedOtp);
         String result = biometricAuthService.requestBiometricAuth(request);
-        System.out.println(result);
-        assertEquals("OTP sent successfully: " + otp, result);
-        verify(smsService).sendSms(request.phoneNumber(), "Your OTP is: " + otp);
+        verify(otpService).generateOtp(request.phoneNumber());
+        verify(smsService).sendSms(request.phoneNumber(), "Your OTP is: 123456");
+        assertEquals("OTP sent successfully: 123456", result);
     }
 
     @Test
@@ -188,6 +186,7 @@ class BiometricAuthServiceImplTest {
         Device device = new Device();
         BiometricSettings settings = new BiometricSettings();
         device.setAccount(settings);
+        device.setBiometryType(BiometryType.FINGERPRINT);
         when(settingsRepository.findIdByUserId(request.userId())).thenReturn(Optional.of(settingsId));
         when(deviceService.changeDeviceEnableStatus(
                 settingsId, request.deviceInfo(), request.enabled()
