@@ -7,7 +7,9 @@ import com.pm.biometric_auth_service.util.JwtTokenUtil;
 import com.pm.biometric_auth_service.validator.FieldsValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,7 +39,30 @@ public class BiometricAuthController {
      */
     @Operation(
             summary = "Enable biometric authentication",
-            description = "Enables biometric authentication for a user after validation"
+            description = "Enables biometric authentication for a user after validation",
+            parameters = {
+                @Parameter(
+                        name = "Accept-Language",
+                        in = ParameterIn.HEADER,
+                        schema = @Schema(type = "string", example = "en-US", description = "Language preference for response messages"),
+                        examples = {
+                                @ExampleObject(name = "English", value = "en-US"),
+                                @ExampleObject(name = "Russian", value = "ru-RU")
+                        }
+                ),
+                @Parameter(
+                        name = "Authorization",
+                        description = "Bearer token for authentication",
+                        in = ParameterIn.HEADER,
+                        schema = @Schema(type = "string", example = "Bearer <token>")
+                ),
+                @Parameter(
+                        name = "X-Request-ID",
+                        description = "Unique request identifier",
+                        in = ParameterIn.HEADER,
+                        schema = @Schema(type = "string", format = "uuid")
+                )
+            }
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Biometric authentication enabled",
@@ -53,7 +78,13 @@ public class BiometricAuthController {
     public ResponseEntity<BiometricSettingsResponse> enableBiometricAuth(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Biometric registration request",
             required = true,
-            content = @Content(schema = @Schema(implementation = BiometricRegisterRequest.class))) @RequestBody BiometricRegisterRequest request) {
+            content = @Content(schema = @Schema(implementation = BiometricRegisterRequest.class))) @RequestBody BiometricRegisterRequest request,
+                                                                         @Parameter(hidden = true)
+                                                                         @RequestHeader(name = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+                                                                         @Parameter(hidden = true)
+                                                                         @RequestHeader(name = "Authorization", required = false) String authHeader,
+                                                                         @Parameter(hidden = true)
+                                                                         @RequestHeader(name = "X-Request-ID", required = false) String requestID) {
         fieldsValidator.registerValidate(request);
         return ResponseEntity.ok(biometricAuthService.enableBiometricAuth(request));
     }
